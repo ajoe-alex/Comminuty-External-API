@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Resource Management API",
+    "title": "Project Resource Management API",
     "version": "1.0.0",
     "description": "This API allows users to manage resources related to project-specific configurations, such as run properties and string encryption, etc. Users must have authorized access to the specified project to execute these API operations."
   },
