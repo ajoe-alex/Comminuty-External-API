@@ -10,7 +10,7 @@
       "url": "{accelqLoginUrl}/awb/api/1.0/{tenantCode}",
       "variables": {
         "tenant_code": {
-          "default": "acmeInc",
+          "default": "",
           "description": "Tenant code for identifying the organization."
         }
       }
