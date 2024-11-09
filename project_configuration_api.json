@@ -59,7 +59,7 @@
                         "description": "The project code for which to retrieve app environments.",
                         "schema": {
                             "type": "string",
-                            "example": "proj123"
+                            "example": "project_name"
                         }
                     },
                     {
@@ -249,7 +249,7 @@
                         "description": "The project code for which to create the app environment.",
                         "schema": {
                             "type": "string",
-                            "example": "proj123"
+                            "example": "project_name"
                         }
                     }
                 ],
@@ -388,7 +388,7 @@
                         "description": "The project code for which to update the app environment.",
                         "schema": {
                             "type": "string",
-                            "example": "proj123"
+                            "example": "project_name"
                         }
                     },
                     {
@@ -513,7 +513,7 @@
                         "description": "The project code for which to delete the app environment.",
                         "schema": {
                             "type": "string",
-                            "example": "proj123"
+                            "example": "project_name"
                         }
                     },
                     {
