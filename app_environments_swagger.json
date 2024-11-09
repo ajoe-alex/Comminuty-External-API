@@ -6,16 +6,24 @@
         "description": "API for managing Project configuration including Application Environments etc. User must have Project Admin privilege on respective Project to execute these APIs."
     },
     "servers": [
-        {
-            "url": "{accelqLoginUrl}/awb/api/1.0/{tenantCode}",
-            "variables": {
-                "tenant_code": {
-                    "default": "acmeInc",
-                    "description": "Tenant code for identifying the organization."
-                }
-            }
+    {
+      "url": "{accelqLoginUrl}/awb/api/1.0/{tenantCode}/{projectCode}",
+      "variables": {
+        "accelqLoginUrl": {
+          "default": "",
+          "description": "Base URL for AccelQ login"
+        },
+        "tenantCode": {
+          "default": "",
+          "description": "Tenant code for your subscription"
+        },
+        "projectCode": {
+          "default": "",
+          "description": "Code for identifying the specific project"
         }
-    ],
+      }
+    }
+  ],
     "paths": {
         "/{projectCode}/config/app-environments": {
             "get": {
