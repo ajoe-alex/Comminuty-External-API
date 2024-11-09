@@ -54,6 +54,12 @@
                 });
                 console.log('Wrapper class removed from all elements within #swagger-ui');
             })
+            
+            waitForElement('a:has(.url)', swagger_ui_).then((elems_) => {
+                elems_.forEach(elem_ => {
+                    elem_.remove()
+                })
+            })
 
             waitForElement('small', swagger_ui_).then((elems_) => {
                 elems_.forEach(version => {

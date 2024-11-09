@@ -61,6 +61,12 @@
                 })
             })
 
+            waitForElement('a:has(.url)', swagger_ui_).then((elems_) => {
+                elems_.forEach(elem_ => {
+                    elem_.remove()
+                })
+            })
+
             window.setInterval(() => {
                 let allExecuteButtons = Array.from(swagger_ui_.querySelectorAll('button.btn.execute.opblock-control__btn'))
                 let filteredExecuteButtons = allExecuteButtons.filter(executeButton => !executeButton.classList.contains('aq__tag'))
