@@ -1,36 +1,36 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Tenant Admin API",
+    "title": "Resource Management API",
     "version": "1.0.0",
-    "description": "API to exercise Tenant Admin functionality including Project creation etc. User must have Tenant Admin privilege to execute these APIs."
+    "description": "This API allows users to manage resources related to project-specific configurations, such as run properties and string encryption, etc. Users must have authorized access to the specified project to execute these API operations."
   },
   "servers": [
     {
-      "url": "{accelqLoginUrl}/awb/api/1.0/{tenantCode}",
+      "url": "{accelqLoginUrl}/awb/api/1.0/{tenant_code}/{projectCode}",
       "variables": {
         "accelqLoginUrl": {
           "default": "",
-          "description": "Base URL for AccelQ login"
+          "description": "The AccelQ login URL for API access."
         },
-        "tenantCode": {
+        "tenant_code": {
           "default": "",
-          "description": "Tenant code for your subscription"
+          "description": "Tenant code for identifying the organization."
         },
         "projectCode": {
           "default": "",
-          "description": "Code identifying a specific project within the tenant"
+          "description": "Project code for identifying the project within the tenant."
         }
       }
     }
   ],
   "paths": {
-    "/admin/projects": {
+    "/res/run-property": {
       "get": {
-        "tags": ["Projects"],
-        "summary": "Retrieve list of Projects in the Tenant",
-        "description": "Retrieve paginated list of Projects in the Tenant.",
-        "operationId": "getProjects",
+        "tags": ["Run Properties"],
+        "summary": "Retrieve list of Run Properties for the project",
+        "description": "Get a list of Run Properties associated with the specified project.",
+        "operationId": "getAllRunProperties",
         "parameters": [
           {
             "name": "user_id",
@@ -53,87 +53,110 @@
           {
             "name": "page",
             "in": "query",
-            "description": "Page number to retrieve",
             "required": false,
+            "description": "Page number for pagination.",
             "schema": {
               "type": "integer",
               "default": 1,
-              "minimum": 1
+              "example": 1
             }
           },
           {
-            "name": "size",
+            "name": "pageSize",
             "in": "query",
-            "description": "Number of items per page (maximum: 100)",
             "required": false,
+            "description": "Number of items per page (Maximum: 100).",
             "schema": {
               "type": "integer",
               "default": 20,
-              "minimum": 1,
-              "maximum": 100
+              "example": 20
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Paginated list of projects",
+            "description": "Successful response with a list of Run Properties.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "page": {
-                      "type": "integer",
-                      "description": "Current page number",
-                      "example": 1
-                    },
-                    "pageSize": {
-                      "type": "integer",
-                      "description": "Number of items per page",
-                      "example": 4
-                    },
-                    "totalPages": {
-                      "type": "integer",
-                      "description": "Total number of pages",
-                      "example": 10
-                    },
-                    "totalItems": {
-                      "type": "integer",
-                      "description": "Total number of projects",
-                      "example": 15
-                    },
+                    "page": { "type": "integer", "example": 3 },
+                    "pageSize": { "type": "integer", "example": 10 },
+                    "totalPages": { "type": "integer", "example": 4 },
+                    "totalCount": { "type": "integer", "example": 36 },
                     "results": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Project"
+                        "type": "object",
+                        "properties": {
+                          "pid": { "type": "integer", "example": 14885 },
+                          "name": { "type": "string", "example": "Test" },
+                          "createdUser": { "type": "integer", "example": 2 },
+                          "createdTimestamp": { "type": "number", "example": 1730801799833 },
+                          "lastModifiedUser": { "type": "integer", "example": 5 },
+                          "lastModifiedTimestamp": { "type": "integer", "example": 1746801799833 }
+                        }
                       }
                     }
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid page number or page size"
-          },
-          "403": {
-            "description": "Forbidden - User does not have permission"
           }
         }
       }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Project": {
-        "type": "object",
-        "properties": {
-          "pid": { "type": "integer", "example": 3 },
-          "projectDisplayName": { "type": "string", "example": "New Project" },
-          "projectCode": { "type": "string", "example": "NewProject" },
-          "description": { "type": "string", "example": "Description for the new project" },
-          "createdUserPid": { "type": "integer", "example": 1 },
-          "createdTimestamp": { "type": "integer", "example": 1728040036528 }
+    },
+    "/res/encrypt": {
+      "post": {
+        "tags": ["Encryption"],
+        "summary": "Encrypts a string",
+        "description": "Converts the input string into an encrypted string.",
+        "operationId": "encryptString",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Login username (email)"
+          },
+          {
+            "name": "api_key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key of the user for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "example": "Input string",
+                "description": "String to encrypt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response with encrypted string",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "3kXu75r/kx3bCzjSVHsvcw=="
+                }
+              }
+            }
+          }
         }
       }
     }
