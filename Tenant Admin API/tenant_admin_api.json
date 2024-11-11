@@ -14,7 +14,7 @@
           "description": "Base URL for AccelQ login"
         },
         "tenantCode": {
-          "default": "",
+          "default": "acmeInc",
           "description": "Tenant code for your subscription"
         }
       }
