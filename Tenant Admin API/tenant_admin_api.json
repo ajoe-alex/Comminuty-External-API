@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "{accelqLoginUrl}/awb/api/1.0/{tenantCode}/{projectCode}",
+      "url": "{accelqLoginUrl}/awb/api/1.0/{tenantCode}",
       "variables": {
         "accelqLoginUrl": {
           "default": "",
@@ -16,20 +16,14 @@
         "tenantCode": {
           "default": "",
           "description": "Tenant code for your subscription"
-        },
-        "projectCode": {
-          "default": "",
-          "description": "Code for identifying the specific project"
         }
       }
     }
   ],
   "paths": {
     "/admin/projects": {
-      "get": {
-        "tags": [
-          "Projects"
-        ],
+        "get": {
+        "tags":["Projects"],
         "summary": "Retrieve list of Projects in the Tenant",
         "description": "Retrieve paginated list of Projects in the Tenant.",
         "operationId": "getProjects",
@@ -141,39 +135,39 @@
                           }
                         }
                       },
-                      "example": [
-                        {
-                          "pid": 1,
-                          "projectDisplayName": "New Project",
-                          "projectCode": "NewProject",
-                          "description": "Description for the new project",
-                          "createdUserPid": 1,
-                          "createdTimestamp": 1629040036528
-                        },
-                        {
-                          "pid": 3,
-                          "projectDisplayName": "Acme Project",
-                          "projectCode": "AcmeProject",
-                          "description": "Description for the acme project",
-                          "createdUserPid": 1,
-                          "createdTimestamp": 1898040036528
-                        },
-                        {
-                          "pid": 6,
-                          "projectDisplayName": "Test Project",
-                          "projectCode": "TestProject",
-                          "description": "Description for the new project",
-                          "createdUserPid": 1,
-                          "createdTimestamp": 1828040036528
-                        },
-                        {
-                          "pid": 7,
-                          "projectDisplayName": "Practice Project",
-                          "projectCode": "PracticeProject",
-                          "description": "Description",
-                          "createdUserPid": 1,
-                          "createdTimestamp": 1728040036528
-                        }
+                      "example":[
+                          {
+                              "pid": 1,
+                              "projectDisplayName": "New Project",
+                              "projectCode": "NewProject",
+                              "description": "Description for the new project",
+                              "createdUserPid": 1,
+                              "createdTimestamp": 1629040036528
+                            },
+                            {
+                              "pid": 3,
+                              "projectDisplayName": "Acme Project",
+                              "projectCode": "AcmeProject",
+                              "description": "Description for the acme project",
+                              "createdUserPid": 1,
+                              "createdTimestamp": 1898040036528
+                            },
+                            {
+                              "pid": 6,
+                              "projectDisplayName": "Test Project",
+                              "projectCode": "TestProject",
+                              "description": "Description for the new project",
+                              "createdUserPid": 1,
+                              "createdTimestamp": 1828040036528
+                            }, 
+                            {
+                              "pid": 7,
+                              "projectDisplayName": "Practice Project",
+                              "projectCode": "PracticeProject",
+                              "description": "Description",
+                              "createdUserPid": 1,
+                              "createdTimestamp": 1728040036528
+                            }
                       ]
                     }
                   }
@@ -216,10 +210,8 @@
           }
         }
       },
-      "post": {
-        "tags": [
-          "Projects"
-        ],
+    "post": {
+         "tags":["Projects"],
         "summary": "Create a new Project",
         "description": "Create a new project in the Tenant. Project name must adhere to the following criteria: <br/>   &nbsp; &nbsp; 1.Must always start with a alphabetic character<br/>   &nbsp; &nbsp; 2.Maximum length of 256 characters <br/>   &nbsp; &nbsp; 3.Only letters, digits, spaces, and underscores  allowed",
         "parameters": [
@@ -284,9 +276,9 @@
                           "description": "Role assigned to the user. Must be an existing role.",
                           "example": "developer"
                         },
-                        "isAdmin": {
-                          "type": "boolean",
-                          "description": "Whether to assign Project admin role to this user."
+                        "isAdmin":{
+                            "type":"boolean",
+                            "description":"Whether to assign Project admin role to this user."
                         }
                       },
                       "required": [
@@ -346,7 +338,8 @@
             "description": "Bad Request Error",
             "content": {
               "application/json": {
-                "schema": {},
+                "schema": {
+                },
                 "examples": {
                   "invalidName": {
                     "summary": "Name validation error",
@@ -454,11 +447,9 @@
         }
       }
     },
-    "/admin/projects/{pjPid}/clone": {
+     "/admin/projects/{pjPid}/clone": {
       "post": {
-        "tags": [
-          "Projects"
-        ],
+         "tags":["Projects"],
         "summary": "Clone a Project",
         "description": "Clone an existing project and create a new one with an optional branching.",
         "operationId": "cloneProject",
@@ -566,7 +557,8 @@
             "description": "Bad Request Error",
             "content": {
               "application/json": {
-                "schema": {},
+                "schema": {
+                },
                 "examples": {
                   "invalidName": {
                     "summary": "Name validation error",
@@ -609,11 +601,9 @@
         }
       }
     },
-    "/admin/projects/{pjPid}": {
+     "/admin/projects/{pjPid}": {
       "put": {
-        "tags": [
-          "Projects"
-        ],
+         "tags":["Projects"],
         "summary": "Update an existing Project",
         "description": "Update the details (name and description) of an existing project.",
         "operationId": "updateProject",
@@ -710,5 +700,75 @@
         }
       }
     }
+
+  },
+  "components": {
+    "schemas": {
+      "Project": {
+        "type": "object",
+        "required": [
+          "projectName",
+          "users"
+        ],
+        "properties": {
+          "projectName": {
+            "type": "string",
+            "description": "Name of the project",
+            "example": "New Project",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_ ]*$"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the project",
+            "example": "This is a new project",
+            "maxLength": 500
+          },
+          "cloneConfigFromProjectPid": {
+            "type": "integer",
+            "description": "PID of the project to clone configuration data from",
+            "example": 5
+          },
+          "assignedUsers": {
+            "type": "array",
+            "description": "List of users to assign to the project. At least one user must be assigned.",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "email",
+                "role"
+              ],
+              "properties": {
+                "userEmail": {
+                  "type": "string",
+                  "format": "email",
+                  "description": "Email of the user",
+                  "example": "user@acmeInc.com"
+                },
+                "role": {
+                  "type": "string",
+                  "description": "Role assigned to the user",
+                  "example": "admin",
+                  "enum": [
+                    "admin",
+                    "developer",
+                    "tester"
+                  ]
+                },
+                "isAdmin": {
+                  "type": "boolean",
+                  "format": "boolean",
+                  "description": "Grant project admin priveleges to the user",
+                  "example": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
+

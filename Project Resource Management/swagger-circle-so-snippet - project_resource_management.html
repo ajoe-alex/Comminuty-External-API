@@ -37,9 +37,10 @@
                 }, 5000); // Timeout after 5 seconds (adjust as necessary)
             });
         }
+
         waitForFunction("SwaggerUIBundle").then(SwaggerUIBundle => {
             SwaggerUIBundle({
-                url: "http://localhost:8080/Tenant%20Admin%20API/tenant_admin_api.json",
+                url: "http://localhost:8080/Project%20Resource%20Management/project_resource_management_api.json",
                 dom_id: '#swagger-ui',
                 presets: [
                     SwaggerUIBundle.presets.apis,
@@ -119,7 +120,7 @@
                         elem.style.display='none';
                     })
                 })
-
+                
                 window.setInterval(() => {
                     let allExecuteButtons = Array.from(swagger_ui_.querySelectorAll('button.btn.execute.opblock-control__btn'))
                     let filteredExecuteButtons = allExecuteButtons.filter(executeButton => !executeButton.classList.contains('aq__tag'))

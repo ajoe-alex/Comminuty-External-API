@@ -18,7 +18,9 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js"
         crossorigin="anonymous"></script>
 
-    <script>
+
+    <script defer>
+
         AQ__INTERVAL_TIMEOUT = 300;
 
         function waitForFunction(functionName) {
@@ -37,9 +39,10 @@
                 }, 5000); // Timeout after 5 seconds (adjust as necessary)
             });
         }
+
         waitForFunction("SwaggerUIBundle").then(SwaggerUIBundle => {
             SwaggerUIBundle({
-                url: "http://localhost:8080/Tenant%20Admin%20API/tenant_admin_api.json",
+                url: "http://localhost:8080/Project%20Configuration%20API/project_configuration_api.json",
                 dom_id: '#swagger-ui',
                 presets: [
                     SwaggerUIBundle.presets.apis,
@@ -60,7 +63,7 @@
                             // Resolve promise with the found element
                         }
                     }
-                        , 100);
+                        , AQ__INTERVAL_TIMEOUT);
                     // Check every 100ms
                 });
             }
