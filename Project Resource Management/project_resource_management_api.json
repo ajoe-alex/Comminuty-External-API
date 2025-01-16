@@ -7,14 +7,14 @@
   },
   "servers": [
     {
-      "url": "{accelqLoginUrl}/awb/api/1.0/{tenant_code}",
+      "url": "{accelqLoginUrl}/awb/api/2.0/{tenant_code}",
       "variables": {
         "accelqLoginUrl": {
           "default": "",
           "description": "The AccelQ login URL for API access."
         },
         "tenant_code": {
-          "default": "acmeInc",
+          "default": "your-tenant",
           "description": "Tenant code for identifying the organization."
         }
       }
@@ -54,8 +54,7 @@
             "required": true,
             "description": "The project code for which to retrieve Run Property.",
             "schema": {
-              "type": "string",
-              "example": "proj123"
+              "type": "string"
             }
           },
           {

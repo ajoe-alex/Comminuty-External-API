@@ -7,21 +7,21 @@
     },
     "servers": [
         {
-            "url": "{accelqLoginUrl}/awb/api/1.0/{tenant_code}",
+            "url": "{accelqLoginUrl}/awb/api/2.0/{tenant_code}",
             "variables": {
               "accelqLoginUrl": {
                 "default": "",
                 "description": "The AccelQ login URL for API access."
               },
               "tenant_code": {
-                "default": "acmeInc",
+                "default": "your-tenant",
                 "description": "Tenant code for identifying the organization."
               }
             }
           }
     ],
     "paths": {
-        "/{projectCode}/config/app-environments": {
+        "/{projectCode}/conf/app-environments": {
             "get": {
                 "tags": [
                     "App Environments"
@@ -350,7 +350,7 @@
                 }
             }
         },
-        "/{projectCode}/config/app-environments/{appEnvironmentId}": {
+        "/{projectCode}/conf/app-environments/{appEnvironmentId}": {
             "put": {
                 "tags": [
                     "App Environments"

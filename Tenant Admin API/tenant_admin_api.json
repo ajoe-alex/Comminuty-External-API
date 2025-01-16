@@ -7,21 +7,21 @@
   },
   "servers": [
     {
-      "url": "{accelqLoginUrl}/awb/api/1.0/{tenantCode}",
+      "url": "{accelqLoginUrl}/awb/api/2.0/{tenantCode}",
       "variables": {
         "accelqLoginUrl": {
           "default": "",
           "description": "Base URL for AccelQ login"
         },
         "tenantCode": {
-          "default": "acmeInc",
+          "default": "your-tenant",
           "description": "Tenant code for your subscription"
         }
       }
     }
   ],
   "paths": {
-    "/admin/projects": {
+    "/administration/projects": {
         "get": {
         "tags":["Projects"],
         "summary": "Retrieve list of Projects in the Tenant",
@@ -447,7 +447,7 @@
         }
       }
     },
-     "/admin/projects/{pjPid}/clone": {
+     "/administration/projects/{pjPid}/clone": {
       "post": {
          "tags":["Projects"],
         "summary": "Clone a Project",
@@ -601,7 +601,7 @@
         }
       }
     },
-     "/admin/projects/{pjPid}": {
+     "/administration/projects/{pjPid}": {
       "put": {
          "tags":["Projects"],
         "summary": "Update an existing Project",
