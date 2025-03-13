@@ -371,6 +371,16 @@
                     "example": false,
                     "description": "Flag indicating if the user is a site administrator"
                   },
+                  "authType":{
+                     "type":"enum",
+                     "example":"SSO",
+                     "description": "Authentication type for user login. Accepted values are ['ACCELQ_NATIVE', 'SSO']."
+                  },
+                  "ssoId":{
+                    "type":"string",
+                    "example":"DemoUser@gmail.com",
+                    "description":"sso Id for Single sign on authentication. Required with authType as 'SSO'."
+                  },
                   "licenseDetailsList": {
                     "type": "array",
                     "items": {
