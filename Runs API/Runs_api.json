@@ -460,6 +460,93 @@
                       }
                     }
                   },
+                  "setup": {
+                    "type": "object",
+                    "properties": {
+                      "testCaseSetup": {
+                        "type": "object",
+                        "properties": {
+                          "actionPid": {
+                            "type": "number",
+                            "example": "14"
+                          },
+                          "actionInputParams": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "example": "configPath",
+                                  "description": "Name of the action input parameter of the setup action."
+                                },
+                                "valueType": {
+                                  "type": "string",
+                                  "example": "LITERAL",
+                                  "description": "Specifies the type of value to be assigned to action input parameter. Accepted values are 'LITERAL','GLOBAL_PROPERTY'. Defaults to 'LITERAL' if not provided."
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "example": "/configs/settings.json",
+                                  "description": "Stores the values to be assigned to the action input parameter. When the valueType is 'LITERAL', it directly stores the actual value. If the valueType is 'GLOBAL_PROPERTY', this field stores the name of the corresponding global property."
+                                }
+                              }
+                            },
+                            "example": [
+                              {
+                                "name": "configPath",
+                                "valueType": "LITERAL",
+                                "value": "/configs/settings.json"
+                              },
+                              {
+                                "name": "maxRetries",
+                                "valueType": "GLOBAL_PROPERTY",
+                                "value": "GP 2"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "testJobSetup": {
+                        "type": "object",
+                        "properties": {
+                          "actionPid": {
+                            "type": "number",
+                            "example": "19"
+                          },
+                          "actionInputParams": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "example": "retryCount",
+                                  "description": "Name of the action input parameter of the setup action."
+                                },
+                                "valueType": {
+                                  "type": "string",
+                                  "example": "LITERAL",
+                                  "description": "Specifies the type of value to be assigned to action input parameter. Accepted values are 'LITERAL','GLOBAL_PROPERTY'. Defaults to 'LITERAL' if not provided."
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "example": "3",
+                                  "description": "Stores the values to be assigned to the action input parameter."
+                                }
+                              }
+                            },
+                            "example": [
+                              {
+                                "name": "retryCount",
+                                "value": "3"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
                   "teardown": {
                     "type": "object",
                     "properties": {
@@ -1224,6 +1311,93 @@
                         "type": "boolean",
                         "example": false,
                         "description": "Indicates whether to rerun or not if previous rerun has no improvement."
+                      }
+                    }
+                  },
+                  "setup": {
+                    "type": "object",
+                    "properties": {
+                      "testCaseSetup": {
+                        "type": "object",
+                        "properties": {
+                          "actionPid": {
+                            "type": "number",
+                            "example": "14"
+                          },
+                          "actionInputParams": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "example": "configPath",
+                                  "description": "Name of the action input parameter of the setup action."
+                                },
+                                "valueType": {
+                                  "type": "string",
+                                  "example": "LITERAL",
+                                  "description": "Specifies the type of value to be assigned to action input parameter. Accepted values are 'LITERAL','GLOBAL_PROPERTY'. Defaults to 'LITERAL' if not provided."
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "example": "/configs/settings.json",
+                                  "description": "Stores the values to be assigned to the action input parameter. When the valueType is 'LITERAL', it directly stores the actual value. If the valueType is 'GLOBAL_PROPERTY', this field stores the name of the corresponding global property."
+                                }
+                              }
+                            },
+                            "example": [
+                              {
+                                "name": "configPath",
+                                "valueType": "LITERAL",
+                                "value": "/configs/settings.json"
+                              },
+                              {
+                                "name": "maxRetries",
+                                "valueType": "GLOBAL_PROPERTY",
+                                "value": "GP 2"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "testJobSetup": {
+                        "type": "object",
+                        "properties": {
+                          "actionPid": {
+                            "type": "number",
+                            "example": "19"
+                          },
+                          "actionInputParams": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "example": "retryCount",
+                                  "description": "Name of the action input parameter of the setup action."
+                                },
+                                "valueType": {
+                                  "type": "string",
+                                  "example": "LITERAL",
+                                  "description": "Specifies the type of value to be assigned to action input parameter. Accepted values are 'LITERAL','GLOBAL_PROPERTY'. Defaults to 'LITERAL' if not provided."
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "example": "3",
+                                  "description": "Stores the values to be assigned to the action input parameter."
+                                }
+                              }
+                            },
+                            "example": [
+                              {
+                                "name": "retryCount",
+                                "value": "3"
+                              }
+                            ]
+                          }
+                        }
                       }
                     }
                   },
@@ -2129,6 +2303,93 @@
                         "type": "boolean",
                         "example": false,
                         "description": "Indicates whether to rerun or not if previous rerun has no improvement."
+                      }
+                    }
+                  },
+                  "setup": {
+                    "type": "object",
+                    "properties": {
+                      "testCaseSetup": {
+                        "type": "object",
+                        "properties": {
+                          "actionPid": {
+                            "type": "number",
+                            "example": "14"
+                          },
+                          "actionInputParams": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "example": "configPath",
+                                  "description": "Name of the action input parameter of the setup action."
+                                },
+                                "valueType": {
+                                  "type": "string",
+                                  "example": "LITERAL",
+                                  "description": "Specifies the type of value to be assigned to action input parameter. Accepted values are 'LITERAL','GLOBAL_PROPERTY'. Defaults to 'LITERAL' if not provided."
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "example": "/configs/settings.json",
+                                  "description": "Stores the values to be assigned to the action input parameter. When the valueType is 'LITERAL', it directly stores the actual value. If the valueType is 'GLOBAL_PROPERTY', this field stores the name of the corresponding global property."
+                                }
+                              }
+                            },
+                            "example": [
+                              {
+                                "name": "configPath",
+                                "valueType": "LITERAL",
+                                "value": "/configs/settings.json"
+                              },
+                              {
+                                "name": "maxRetries",
+                                "valueType": "GLOBAL_PROPERTY",
+                                "value": "GP 2"
+                              }
+                            ]
+                          }
+                        }
+                      },
+                      "testJobSetup": {
+                        "type": "object",
+                        "properties": {
+                          "actionPid": {
+                            "type": "number",
+                            "example": "19"
+                          },
+                          "actionInputParams": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "example": "retryCount",
+                                  "description": "Name of the action input parameter of the setup action."
+                                },
+                                "valueType": {
+                                  "type": "string",
+                                  "example": "LITERAL",
+                                  "description": "Specifies the type of value to be assigned to action input parameter. Accepted values are 'LITERAL','GLOBAL_PROPERTY'. Defaults to 'LITERAL' if not provided."
+                                },
+                                "value": {
+                                  "type": "string",
+                                  "example": "3",
+                                  "description": "Stores the values to be assigned to the action input parameter."
+                                }
+                              }
+                            },
+                            "example": [
+                              {
+                                "name": "retryCount",
+                                "value": "3"
+                              }
+                            ]
+                          }
+                        }
                       }
                     }
                   },
