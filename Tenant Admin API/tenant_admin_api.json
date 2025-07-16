@@ -22,8 +22,8 @@
   ],
   "paths": {
     "/administration/projects": {
-        "get": {
-        "tags":["Projects"],
+      "get": {
+        "tags": ["Projects"],
         "summary": "Retrieve list of Projects in the Tenant",
         "description": "Retrieve paginated list of Projects in the Tenant.",
         "operationId": "getProjects",
@@ -132,42 +132,86 @@
                             "type": "integer",
                             "description": "Timestamp when the project was created",
                             "example": 1728040036528
+                          },
+                          "branchPath": {
+                            "type": "array",
+                            "description": "Parent Heirarchy of projects",
+                            "example": "[\"Root Project\",\"Root Project Child\"]"
+                          },
+                          "lastMergeInfo": {
+                            "type": "object",
+                            "properties": {
+                              "userPid": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "mergeTimeStamp": {
+                                "type": "integer",
+                                "format": "int64",
+                                "description": "Unix timestamp in milliseconds",
+                                "example": 1751012484566
+                              },
+                              "mergeDescription": {
+                                "type": "string",
+                                "example": "dafsfadf"
+                              },
+                              "sourceProjectPath": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "example": ["Source Project Deleted"]
+                              }
+                            }
                           }
                         }
                       },
-                      "example":[
-                          {
-                              "pid": 1,
-                              "projectDisplayName": "New Project",
-                              "projectCode": "NewProject",
-                              "description": "Description for the new project",
-                              "createdUserPid": 1,
-                              "createdTimestamp": 1629040036528
-                            },
-                            {
-                              "pid": 3,
-                              "projectDisplayName": "Acme Project",
-                              "projectCode": "AcmeProject",
-                              "description": "Description for the acme project",
-                              "createdUserPid": 1,
-                              "createdTimestamp": 1898040036528
-                            },
-                            {
-                              "pid": 6,
-                              "projectDisplayName": "Test Project",
-                              "projectCode": "TestProject",
-                              "description": "Description for the new project",
-                              "createdUserPid": 1,
-                              "createdTimestamp": 1828040036528
-                            }, 
-                            {
-                              "pid": 7,
-                              "projectDisplayName": "Practice Project",
-                              "projectCode": "PracticeProject",
-                              "description": "Description",
-                              "createdUserPid": 1,
-                              "createdTimestamp": 1728040036528
-                            }
+                      "example": [
+                        {
+                          "pid": 1,
+                          "projectDisplayName": "New Project",
+                          "projectCode": "NewProject",
+                          "description": "Description for the new project",
+                          "createdUserPid": 1,
+                          "createdTimestamp": 1629040036528
+                        },
+                        {
+                          "pid": 3,
+                          "projectDisplayName": "Acme Project",
+                          "projectCode": "AcmeProject",
+                          "description": "Description for the acme project",
+                          "createdUserPid": 1,
+                          "createdTimestamp": 1898040036528,
+                          "branchPath": ["New Project"]
+                        },
+                        {
+                          "pid": 6,
+                          "projectDisplayName": "Test Project",
+                          "projectCode": "TestProject",
+                          "description": "Description for the new project",
+                          "createdUserPid": 1,
+                          "createdTimestamp": 1828040036528,
+                          "branchPath": ["New Project", "Acme Project"]
+                        },
+                        {
+                          "pid": 7,
+                          "projectDisplayName": "Sanity Project",
+                          "projectCode": "SanityProject",
+                          "description": "Description",
+                          "createdUserPid": 1,
+                          "createdTimestamp": 1728040036528,
+                          "branchPath": [
+                            "New Project",
+                            "Acme Project",
+                            "Test Project"
+                          ],
+                          "lastMergeInfo": {
+                            "userPid": 1,
+                            "mergeTimeStamp": 1751012484566,
+                            "mergeDescription": "Merging UI component changes",
+                            "sourceProjectPath": ["New Project", "Acme Project"]
+                          }
+                        }
                       ]
                     }
                   }
@@ -210,8 +254,8 @@
           }
         }
       },
-    "post": {
-         "tags":["Projects"],
+      "post": {
+        "tags": ["Projects"],
         "summary": "Create a new Project",
         "description": "Create a new project in the Tenant. Project name must adhere to the following criteria: <br/>   &nbsp; &nbsp; 1.Must always start with a alphabetic character<br/>   &nbsp; &nbsp; 2.Maximum length of 256 characters <br/>   &nbsp; &nbsp; 3.Only letters, digits, spaces, and underscores  allowed",
         "parameters": [
@@ -276,23 +320,17 @@
                           "description": "Role assigned to the user. Must be an existing role.",
                           "example": "developer"
                         },
-                        "isAdmin":{
-                            "type":"boolean",
-                            "description":"Whether to assign Project admin role to this user."
+                        "isAdmin": {
+                          "type": "boolean",
+                          "description": "Whether to assign Project admin role to this user."
                         }
                       },
-                      "required": [
-                        "userId",
-                        "role"
-                      ]
+                      "required": ["userId", "role"]
                     },
                     "minItems": 1
                   }
                 },
-                "required": [
-                  "projectName",
-                  "assignedUsers"
-                ]
+                "required": ["projectName", "assignedUsers"]
               }
             }
           }
@@ -338,8 +376,7 @@
             "description": "Bad Request Error",
             "content": {
               "application/json": {
-                "schema": {
-                },
+                "schema": {},
                 "examples": {
                   "invalidName": {
                     "summary": "Name validation error",
@@ -447,9 +484,9 @@
         }
       }
     },
-     "/administration/projects/{pjPid}/clone": {
+    "/administration/projects/{pjPid}/clone": {
       "post": {
-         "tags":["Projects"],
+        "tags": ["Projects"],
         "summary": "Clone a Project",
         "description": "Clone an existing project and create a new one with an optional branching.",
         "operationId": "cloneProject",
@@ -557,8 +594,7 @@
             "description": "Bad Request Error",
             "content": {
               "application/json": {
-                "schema": {
-                },
+                "schema": {},
                 "examples": {
                   "invalidName": {
                     "summary": "Name validation error",
@@ -601,9 +637,9 @@
         }
       }
     },
-     "/administration/projects/{pjPid}": {
+    "/administration/projects/{pjPid}": {
       "put": {
-         "tags":["Projects"],
+        "tags": ["Projects"],
         "summary": "Update an existing Project",
         "description": "Update the details (name and description) of an existing project.",
         "operationId": "updateProject",
@@ -655,10 +691,7 @@
                     "example": "Updated description"
                   }
                 },
-                "required": [
-                  "projectName",
-                  "description"
-                ]
+                "required": ["projectName", "description"]
               }
             }
           }
@@ -700,7 +733,5 @@
         }
       }
     }
-
   }
 }
-
