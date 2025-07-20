@@ -1,0 +1,563 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Scenario API",
+    "version": "1.0.0",
+    "description": "This API provides endpoints to fetch Scenario information and update test Scenarios. Access to these endpoints requires proper  authentication and project permissions."
+  },
+  "servers": [
+    {
+      "url": "{accelqLoginUrl}/awb/api/2.0/{tenantCode}/{projectName}",
+      "variables": {
+        "accelqLoginUrl": {
+          "default": "localhost:9090",
+          "description": "Base URL for AccelQ application"
+        },
+        "tenantCode": {
+          "default": "accelq",
+          "description": "Tenant code for your subscription"
+        },
+        "projectName": {
+          "default": "accelqProject",
+          "description": "Name of the project"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/scn/scenarios/auto/fetch-details": {
+      "post": {
+        "tags": [
+          "Scenario"
+        ],
+        "summary": "Retrieves information about auto Scenarios",
+        "description": "This API provides a paginated response containing Scenario information, including the details of their associated steps.",
+        "operationId": "getScenarioStepDetails",
+        "parameters": [
+          {
+            "name": "showMyView",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "By default, this API returns information for the base (non–checked-out) version of the Scenarios. If this flag is set to true, it returns the current user's checked-out version if available; otherwise, it falls back to the base version."
+          },
+          {
+            "name": "user_id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Login username (email)"
+          },
+          {
+            "name": "api_key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key of the user for authentication"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "description": "Page number for pagination.",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "example": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "description": "Number of items per page (Maximum: 100).",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "example": 20
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "scenarioIds"
+                ],
+                "properties": {
+                  "scenarioIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "List of Scenario IDs for which the information is retrieved.",
+                    "example": [
+                      1,
+                      3,
+                      8
+                    ]
+                  },
+                  "includeStepDetails": {
+                    "type": "boolean",
+                    "description": "Flag to include the Scenario step details in the response."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of Scenarios details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "page": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "pageSize": {
+                      "type": "integer",
+                      "example": 10
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "totalCount": {
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1,
+                            "description": "ID of the Scenario shown in the entity grid"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Ticket Booking",
+                            "description": "Name of the Scenario"
+                          },
+                          "description": {
+                            "type": "string",
+                            "example": "Scenario to test Ticket Booking functionality",
+                            "description": "Description of the Scenario"
+                          },
+                          "isCheckedOutVersion": {
+                            "type": "boolean",
+                            "example": true,
+                            "description": "Indicates whether the returned entity is the base version or the checked-out version."
+                          },
+                          "stepDetails": {
+                            "type": "array",
+                            "description": "List of step details in the Scenario",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "stepIndex": {
+                                  "type": "integer",
+                                  "description": "Display index of the step in the Scenario"
+                                },
+                                "actionName": {
+                                  "type": "string",
+                                  "description": "Name of the action performed in this step"
+                                },
+                                "actionDescription": {
+                                  "type": "string",
+                                  "nullable": true,
+                                  "description": "Description of the action (can be null)"
+                                },
+                                "contextName": {
+                                  "type": "string",
+                                  "description": "Name of the context to which the action belongs"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example":  [
+                          {
+                            "id": 1,
+                            "name": "Ticket Booking",
+                            "description": "Scenario to test Ticket Booking functionality",
+                            "isCheckedOutVersion": true,
+                            "stepDetails": [
+                              {
+                                "stepIndex": 1,
+                                "actionName": "Invoke Browser",
+                                "actionDescription": "Initiates a new browser session and loads it with given URL.",
+                                "contextName": "Home Page"
+                              },
+                              {
+                                "stepIndex": 2,
+                                "actionName": "Login to Booking System",
+                                "actionDescription": "Action to login into the booking system",
+                                "contextName": "Login Page"
+                              }
+                            ]
+                          },
+                          {
+                            "id": 3,
+                            "name": "User Registration",
+                            "description": "Scenario to test new user registration flow",
+                            "isCheckedOutVersion": false,
+                            "stepDetails": [
+                              {
+                                "stepIndex": 1,
+                                "actionName": "Open Registration Page",
+                                "actionDescription": "Opens the registration page.",
+                                "contextName": "Registration Page"
+                              },
+                              {
+                                "stepIndex": 2,
+                                "actionName": "Fill User Details",
+                                "actionDescription": "Fills the registration form.",
+                                "contextName": "Registration Form"
+                              }
+                            ]
+                          },
+                          {
+                            "id": 8,
+                            "name": "Logout",
+                            "description": "Scenario to test user logout",
+                            "isCheckedOutVersion": true,
+                            "stepDetails": [
+                              {
+                                "stepIndex": 1,
+                                "actionName": "Click Logout",
+                                "actionDescription": "Clicks the logout button.",
+                                "contextName": "Header"
+                              }
+                            ]
+                          }
+                        ]
+                      
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid authentication credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid user credentials or API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized Access"
+                    }
+                  }
+                },
+                "examples": {
+                  "general": {
+                    "summary": "authorization Error",
+                    "value": {
+                      "error": "User does not have authorization to access this feature"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Error occurred while retrieving Scenarios details"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scn/scenarios/{scenarioType}/bulk-update": {
+      "patch": {
+        "tags": [
+          "Scenario"
+        ],
+        "summary": "Bulk update multiple Scenarios",
+        "description": "Allows bulk updating of Scenario entities to streamline workflow operations. Ideal for applying consistent changes across multiple Scenarios.",
+        "operationId": "updateScenarios",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Login username (email)"
+          },
+          {
+            "name": "api_key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key of the user for authentication"
+          },
+          {
+            "name": "scenarioType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "manual"
+              ]
+            },
+            "description": "Scenario Type"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "scenarioIds",
+                  "requirementKeys",
+                  "updateType",
+                  "externalIntegrationProject"
+                ],
+                "properties": {
+                  "scenarioIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "List of Scenario IDs to integrate with requirements",
+                    "example": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      10
+                    ]
+                  },
+                  "requirementTraceability": {
+  "type": "object",
+  "description": "Contains details for updating requirement traceability of Scenario entities.",
+  "properties": {
+    "requirementKeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of requirement keys to associate with Scenarios",
+      "example": ["key1", "Key3"]
+    },
+    "updateType": {
+      "type": "string",
+      "enum": ["OVERRIDE", "APPEND"],
+      "description": "Specifies the update behavior: OVERRIDE replaces existing requirements, APPEND adds new requirements to existing ones"
+    },
+    "externalIntegrationProject": {
+      "type": "string",
+      "description": "Name of the external integration project",
+      "example": "JIRA HOME"
+    }
+  }
+}
+
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated Scenarios Requirement traceability.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "updatedEntities": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      },
+                      "description": "List of scenario IDs that were successfully updated",
+                      "example": [
+                        1,
+                        2,
+                        3
+                      ]
+                    },
+                    "notUpdatedOthersCheckedOutEntities": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      },
+                      "description": "Contains the scenario IDs that could not be updated due to being checked out by other users.",
+                      "example": [
+                        4,
+                        5
+                      ]
+                    },
+                    "notFoundEntities": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      },
+                      "description": "List of scenario IDs that were not found",
+                      "example": [
+                        10
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "scenarioIds cannot be null or empty"
+                    }
+                  }
+                },
+                "examples": {
+                  "nullRequestBody": {
+                    "summary": "Null request body",
+                    "value": {
+                      "error": "Request Body cannot be null or empty"
+                    }
+                  },
+                  "noExternalIntegration": {
+                    "summary": "External integration not configured",
+                    "value": {
+                      "error": "External Integration is not configured for the project"
+                    }
+                  },
+                  "nullScenarioIds": {
+                    "summary": "Missing Scenario IDs",
+                    "value": {
+                      "error": "scenarioIds cannot be null or empty"
+                    }
+                  },
+                  "nullRequirementKeys": {
+                    "summary": "Missing requirement keys",
+                    "value": {
+                      "error": "requirementKeys cannot be null or empty"
+                    }
+                  },
+                  "nullExternalProject": {
+                    "summary": "Missing external integration project",
+                    "value": {
+                      "error": "externalIntegrationProject cannot be null or empty"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid authentication credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid user credentials or API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission to perform this operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User does not have authorization to access this feature"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal error occurred while requirements integration"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
