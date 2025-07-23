@@ -10,7 +10,7 @@
       "url": "{accelqLoginUrl}/awb/api/2.0/{tenantCode}/{projectName}",
       "variables": {
         "accelqLoginUrl": {
-          "default": "localhost:9090",
+          "default": "",
           "description": "Base URL for AccelQ application"
         },
         "tenantCode": {
