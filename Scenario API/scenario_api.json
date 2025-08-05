@@ -3,7 +3,7 @@
   "info": {
     "title": "Scenario API",
     "version": "1.0.0",
-    "description": "This API provides endpoints to fetch Scenario information and update test Scenarios. Access to these endpoints requires proper  authentication and project permissions."
+    "description": "The AccelQ Scenario API provides comprehensive endpoints for retrieving and updating test scenarios within your AccelQ projects.\n\nThis RESTful API enables you to:\n- Retrieve Scenario details with advanced filtering and pagination support\n- Perform bulk updates on multiple Scenarios simultaneously \n\n**Authentication**: All endpoints require valid user credentials (`user_id`) and API key (`api_key`) passed as headers."
   },
   "servers": [
     {
@@ -30,8 +30,8 @@
         "tags": [
           "Scenario"
         ],
-        "summary": "Retrieves information about auto Scenarios",
-        "description": "This API provides a paginated response containing Scenario information, including the details of their associated steps.",
+        "summary": "Retrieve Scenario details with advanced filtering and pagination support",
+        "description": "Fetches comprehensive information about automated test Scenarios within your project. This endpoint supports:\n\n- **Pagination**: Control response size with configurable page numbers and sizes (max 25 items per page)\n- **Flexible Filtering**: Filter by specific Scenario IDs or requirement traceability keys\n- **Optional Detailed Information**: Selectively include  Scenario metadata such as step details, requirement traceability in the response\n-  **Version Control**: Choose between base version or user's checked-out version of Scenarios",
         "operationId": "getScenarioStepDetails",
         "parameters": [
           {
@@ -42,7 +42,7 @@
               "type": "boolean",
               "default": false
             },
-            "description": "By default, this API returns information for the base (non–checked-out) version of the Scenarios. If this flag is set to true, it returns the current user's checked-out version if available; otherwise, it falls back to the base version."
+            "description": "Controls scenario version selection:\n- `false` (default): Returns base version of Scenarios regardless of your checked out activity\n- `true`: Returns user's checked-out version if available, otherwise falls back to base version"
           },
           {
             "name": "user_id",
@@ -60,13 +60,13 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key of the user for authentication"
+            "description": "API key of the user for authentication. Obtain this from your AccelQ user profile."
           },
           {
             "name": "pageNumber",
             "in": "query",
             "required": false,
-            "description": "Page number for pagination.",
+            "description": "Page number for pagination. Use this to navigate through large result sets efficiently.",
             "schema": {
               "type": "integer",
               "default": 1,
@@ -77,10 +77,9 @@
             "name": "pageSize",
             "in": "query",
             "required": false,
-            "description": "Number of items per page (Maximum: 100).",
+            "description": "Number of Scenarios to return per page.\n\n**Constraints**:\n- Minimum: 1\n- Maximum: 25\n- Default: 20",
             "schema": {
               "type": "integer",
-              "default": 20,
               "example": 20
             }
           }
@@ -95,21 +94,47 @@
                   "scenarioIds"
                 ],
                 "properties": {
-                  "scenarioIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of Scenario IDs for which the information is retrieved.",
-                    "example": [
-                      1,
-                      3,
-                      8
-                    ]
+                  "filter": {
+                    "type": "object",
+                    "description": "**Filtering Criteria** for scenario selection. When multiple criteria are provided, they are combined using logical AND.\n\n**Empty Filter Behavior**: Returns all accessible scenarios in the project.",
+                    "properties": {
+                      "scenarioIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "description": "Optional. Specifies the list of Scenario IDs to filter the results. If not provided, information for all available scenarios will be retrieved.",
+                        "example": [
+                          1,
+                          3,
+                          8
+                        ]
+                      },
+                      "requirementKeys": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Optional. List of requirement traceability keys used to filter scenarios. Returns all scenarios linked to any of the specified requirement keys.",
+                        "example": [
+                          "TP-12",
+                          "TP-59"
+                        ]
+                      }
+                    }
                   },
-                  "includeStepDetails": {
+                  "fetchDetails":{
+                    "type":"object",
+                    "properties":{
+                      "steps": {
                     "type": "boolean",
                     "description": "Flag to include the Scenario step details in the response."
+                  },
+                  "requirementTraceability": {
+                    "type": "boolean",
+                    "description": "Flag to include the Scenario requirement traceability details in the response."
+                  }
+                    }
                   }
                 }
               }
@@ -118,7 +143,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successful retrieval of Scenarios details",
+            "description": "**Successful retrieval** of Scenario details with comprehensive information about filtered Scenarios.",
             "content": {
               "application/json": {
                 "schema": {
@@ -190,66 +215,79 @@
                                 }
                               }
                             }
+                          },
+                          "requirementTraceability": {
+                            "type": "array",
+                            "description": "List of Requirement traceability keys associated to the Scenario",
+                            "example": [
+                              "TP-22",
+                              "TP-49"
+                            ]
                           }
                         }
                       },
-                      "example":  [
-                          {
-                            "id": 1,
-                            "name": "Ticket Booking",
-                            "description": "Scenario to test Ticket Booking functionality",
-                            "isCheckedOutVersion": true,
-                            "stepDetails": [
-                              {
-                                "stepIndex": 1,
-                                "actionName": "Invoke Browser",
-                                "actionDescription": "Initiates a new browser session and loads it with given URL.",
-                                "contextName": "Home Page"
-                              },
-                              {
-                                "stepIndex": 2,
-                                "actionName": "Login to Booking System",
-                                "actionDescription": "Action to login into the booking system",
-                                "contextName": "Login Page"
-                              }
-                            ]
-                          },
-                          {
-                            "id": 3,
-                            "name": "User Registration",
-                            "description": "Scenario to test new user registration flow",
-                            "isCheckedOutVersion": false,
-                            "stepDetails": [
-                              {
-                                "stepIndex": 1,
-                                "actionName": "Open Registration Page",
-                                "actionDescription": "Opens the registration page.",
-                                "contextName": "Registration Page"
-                              },
-                              {
-                                "stepIndex": 2,
-                                "actionName": "Fill User Details",
-                                "actionDescription": "Fills the registration form.",
-                                "contextName": "Registration Form"
-                              }
-                            ]
-                          },
-                          {
-                            "id": 8,
-                            "name": "Logout",
-                            "description": "Scenario to test user logout",
-                            "isCheckedOutVersion": true,
-                            "stepDetails": [
-                              {
-                                "stepIndex": 1,
-                                "actionName": "Click Logout",
-                                "actionDescription": "Clicks the logout button.",
-                                "contextName": "Header"
-                              }
-                            ]
-                          }
-                        ]
-                      
+                      "example": [
+                        {
+                          "id": 1,
+                          "name": "Ticket Booking",
+                          "description": "Scenario to test Ticket Booking functionality",
+                          "isCheckedOutVersion": true,
+                          "stepDetails": [
+                            {
+                              "stepIndex": 1,
+                              "actionName": "Invoke Browser",
+                              "actionDescription": "Initiates a new browser session and loads it with given URL.",
+                              "contextName": "Home Page"
+                            },
+                            {
+                              "stepIndex": 2,
+                              "actionName": "Login to Booking System",
+                              "actionDescription": "Action to login into the booking system",
+                              "contextName": "Login Page"
+                            }
+                          ],
+                          "requirementTraceability": [
+                            "TP-22",
+                            "TP-49"
+                          ]
+                        },
+                        {
+                          "id": 3,
+                          "name": "User Registration",
+                          "description": "Scenario to test new user registration flow",
+                          "isCheckedOutVersion": false,
+                          "stepDetails": [
+                            {
+                              "stepIndex": 1,
+                              "actionName": "Open Registration Page",
+                              "actionDescription": "Opens the registration page.",
+                              "contextName": "Registration Page"
+                            },
+                            {
+                              "stepIndex": 2,
+                              "actionName": "Fill User Details",
+                              "actionDescription": "Fills the registration form.",
+                              "contextName": "Registration Form"
+                            }
+                          ],
+                          "requirementTraceability": []
+                        },
+                        {
+                          "id": 8,
+                          "name": "Logout",
+                          "description": "Scenario to test user logout",
+                          "isCheckedOutVersion": true,
+                          "stepDetails": [
+                            {
+                              "stepIndex": 1,
+                              "actionName": "Click Logout",
+                              "actionDescription": "Clicks the logout button.",
+                              "contextName": "Header"
+                            }
+                          ],
+                          "requirementTraceability": []
+                        }
+                      ]
                     }
                   }
                 }
@@ -320,8 +358,8 @@
         "tags": [
           "Scenario"
         ],
-        "summary": "Bulk update multiple Scenarios",
-        "description": "Allows bulk updating of Scenario entities to streamline workflow operations. Ideal for applying consistent changes across multiple Scenarios.",
+       "summary":"Process multiple Scenario updates with granular control and configurations",
+        "description": "Provides efficient bulk updates of Scenario metadata through flexible, operation-based requests. This API allows different Scenarios to be updated with distinct criteria and configurations. Each object in the payload targets specific Scenario IDs and applies the defined metadata changes, providing granular control over batch modifications.",
         "operationId": "updateScenarios",
         "parameters": [
           {
@@ -340,7 +378,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key of the user for authentication"
+           "description": "API key of the user for authentication. Obtain this from your AccelQ user profile."
           },
           {
             "name": "scenarioType",
@@ -361,8 +399,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "required": [
+                "type": "array",
+                "items":{
+                  "type":"object",
+                  "required": [
                   "scenarioIds",
                   "requirementKeys",
                   "updateType",
@@ -385,38 +425,63 @@
                     ]
                   },
                   "requirementTraceability": {
-  "type": "object",
-  "description": "Contains details for updating requirement traceability of Scenario entities.",
-  "properties": {
-    "requirementKeys": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "List of requirement keys to associate with Scenarios",
-      "example": ["key1", "Key3"]
-    },
-    "updateType": {
-      "type": "string",
-      "enum": ["OVERRIDE", "APPEND"],
-      "description": "Specifies the update behavior: OVERRIDE replaces existing requirements, APPEND adds new requirements to existing ones"
-    },
-    "externalIntegrationProject": {
-      "type": "string",
-      "description": "Name of the external integration project",
-      "example": "JIRA HOME"
-    }
-  }
-}
-
+                    "type": "object",
+                    "description": "Contains details for updating requirement traceability of Scenario entities.",
+                    "properties": {
+                      "requirementKeys": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "List of requirement keys to associate with Scenarios",
+                        "example": [
+                          "key1",
+                          "Key3"
+                        ]
+                      },
+                      "updateType": {
+                        "type": "string",
+                        "enum": [
+                          "OVERRIDE",
+                          "APPEND"
+                        ],
+                        "description": "Specifies the update behavior: OVERRIDE replaces existing requirements, APPEND adds new requirements to existing ones"
+                      },
+                      "externalIntegrationProject": {
+                        "type": "string",
+                        "description": "Name of the external integration project",
+                        "example": "JIRA HOME"
+                      }
+                    }
+                  }
                 }
+                },
+                "example":[
+                  {
+                    "scenarioIds":[1,2],
+                    "requirementTraceability":{
+                      "requirementKeys":["TP-11","TP-31"],
+                      "updateType":"APPEND",
+                      "externalIntegrationProject":"SanityWorkSpace"
+                    }
+                  },
+                  {
+                    "scenarioIds":[98,102],
+                    "requirementTraceability":{
+                      "requirementKeys":["TP-51","TP-319","TP-987"],
+                      "updateType":"OVERRIDE",
+                      "externalIntegrationProject":"SanityWorkSpace"
+                    }
+                  }
+                ]
+                
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successfully updated Scenarios Requirement traceability.",
+           "description": "Bulk update completed with detailed results showing successfully updated Scenarios, checkout conflicts, and not found Scenario IDs.",
             "content": {
               "application/json": {
                 "schema": {
