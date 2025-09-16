@@ -136,6 +136,9 @@
                           "branchPath": {
                             "type": "array",
                             "description": "Parent Heirarchy of projects",
+                            "items": {
+                              "type": "string"
+                            },
                             "example": "[\"Root Project\",\"Root Project Child\"]"
                           },
                           "lastMergeInfo": {
@@ -726,6 +729,360 @@
                 "schema": {},
                 "example": {
                   "error": "Project with PID 3 not found."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/administration/projects/requirement-traceability/configure": {
+      "patch": {
+        "tags": ["Requirement Traceability Configuration"],
+        "summary": "Configures Requirement Traceability integration for given Projects",
+        "description": "This API configures Requirements Traceability Integration within the Project Configuration for a specified list of projects. It must be executed by a Tenant Admin to ensure access to all listed projects. \n\n **Note:** Any existing Requirements Traceability configuration will be overwritten. However, currently mapped tickets/stories from these integrations will be retained.",
+        "operationId": "bulkExtIntegration",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Login username (email)"
+          },
+          {
+            "name": "api_key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key of the user for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["targetProjects", "requirementTraceability"],
+                "properties": {
+                  "projectNames": {
+                    "type": "array",
+                    "description": "List of Project Display Names to configure Requirement Traceability",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "Release Project",
+                      "Sanity Project",
+                      "Staging Project"
+                    ]
+                  },
+                  "updateExisting": {
+                    "type": "boolean",
+                    "example": "true"
+                  },
+                  "Atlassian JIRA": {
+                    "type": "object",
+                    "description": "Requirement Traceability Details",
+                    "properties": {
+                      "platform": {
+                        "type": "string",
+                        "description": "Name of the Requirement Integration Platform",
+                        "example": "Atlassian Jira"
+                      },
+                      "platformURL": {
+                        "type": "string",
+                        "description": "URL of the Itegration Platform",
+                        "example": "https://accelq.jira.com"
+                      },
+                      "username": {
+                        "type": "string",
+                        "description": "User name associated with Integration Platform",
+                        "example": "Test.user"
+                      },
+                      "password/apiToken": {
+                        "type": "string",
+                        "description": "User in Integration Platform authentication key, provide password for Basic auth else API token for Bearer auth type",
+                        "example": "IQWQYQZXUNVBZQEWQUEZXCFGFA"
+                      },
+                      "connectionMode": {
+                        "type": "string",
+                        "enum":["BROWSER","SERVER"],
+                        "description": "Communication with your Jira instance can be routed either from the user’s browser or from ACCELQ server. If your Jira server is blocked from outside access, choose the BROWSER option.",
+                        "example": "BROWSER"
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "Atlassian JIRA": {
+                  "value": {
+                    "projectNames": [
+                      "Release Project",
+                      "Sanity Project",
+                      "Staging Project"
+                    ],
+                    "updateExisting": "true",
+                    "traceabilityConfig": {
+                      "platform": "Atlassian JIRA",
+                      "platformURL": "https://AQ.jira.com",
+                      "userName": "QA.Admin",
+                      "password": "QAJira@123",
+                      "connectionMode": "BROWSER"
+                    }
+                  }
+                },
+                "Azure Dev Ops": {
+                  "value": {
+                    "projectNames": [
+                      "Release Project",
+                      "Sanity Project",
+                      "Staging Project"
+                    ],
+                    "updateExisting": "false",
+                    "traceabilityConfig": {
+                      "platform": "Azure Dev Ops",
+                      "platformURL": "https://dev.azure.com/QA-Sanity",
+                      "userName": "QA.Admin",
+                      "apiToken": "QADevops@123",
+                      "connectionMode": "BROWSER"
+                    }
+                  }
+                },
+                "Rally Cloud": {
+                  "value": {
+                    "projectNames": [
+                      "Release Project",
+                      "Sanity Project",
+                      "Staging Project"
+                    ],
+                    "updateExisting": "true",
+                    "traceabilityConfig": {
+                      "platform": "Rally Cloud",
+                      "platformURL": "https://AQ.rally.com",
+                      "userName": "QA.Admin",
+                      "password": "QARally@123",
+                      "subscriptionObjectId": "AZXKJNBHG8768BMJ8AZTR"
+                    }
+                  }
+                },
+                "Spira": {
+                  "value": {
+                    "projectNames": [
+                      "Release Project",
+                      "Sanity Project",
+                      "Staging Project"
+                    ],
+                    "updateExisting": "true",
+                    "traceabilityConfig": {
+                      "platform": "Spira",
+                      "platformURL": "https://AQ.Spira.com",
+                      "userName": "QA.Admin",
+                      "password": "QARally@123",
+                      "connectionMode": "BROWSER"
+                    }
+                  }
+                },
+                "ClickUp": {
+                  "value": {
+                    "projectNames": [
+                      "Release Project",
+                      "Sanity Project",
+                      "Staging Project"
+                    ],
+                    "traceabilityConfig": {
+                      "platform": "Click Up",
+                      "platformURL": "https://AQ.Spira.com",
+                      "workspaceId": "QA.Admin",
+                      "apiToken": "QASpira@123",
+                      "connectionMode": "BROWSER"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bulk Integration completed with detailed results showing updated Projects, notFound Projects and skipped Projects With Traceability",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "configuredProjects": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["Release Project", "Sanity Project"]
+                    },
+                    "missingProjects": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["Staging Project"]
+                    },
+                    "skippedProjectsDueToExistingTraceability": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid authentication credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid user credentials or API key"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Validation error message"
+                    }
+                  }
+                },
+                "examples": {
+                  "nullRequestBody": {
+                    "summary": "Null request body",
+                    "value": {
+                      "error": "Request Body is mandatory."
+                    }
+                  },
+                  "missingProjectNames": {
+                    "summary": "Project names missing",
+                    "value": {
+                      "error": "projectNames cannot be null or empty."
+                    }
+                  },
+                  "nullTraceabilityConfig": {
+                    "summary": "Missing traceabilityConfig",
+                    "value": {
+                      "error": "traceabilityConfig cannot be null."
+                    }
+                  },
+                  "missingPlatform": {
+                    "summary": "Missing platform",
+                    "value": {
+                      "error": "platform cannot be null."
+                    }
+                  },
+                  "invalidPlatform": {
+                    "summary": "Unsupported platform",
+                    "value": {
+                      "error": "Accepted platforms are : [Atlassian Jira, Azure Dev Ops, Rally Cloud, Spira, Click Up]."
+                    }
+                  },
+                  "missingPlatformURL": {
+                    "summary": "Missing Platform URL",
+                    "value": {
+                      "error": "Platform URL cannot be null or empty."
+                    }
+                  },
+                  "missingUserName": {
+                    "summary": "Missing userName",
+                    "value": {
+                      "error": "userName of integration platform cannot be null or empty."
+                    }
+                  },
+                  "missingPasswordOrApiToken": {
+                    "summary": "Missing credentials",
+                    "value": {
+                      "error": "Password or API Token of Integration platform is required."
+                    }
+                  },
+                  "missingSubscriptionObjectId": {
+                    "summary": "Missing Rally subscriptionObjectId",
+                    "value": {
+                      "error": "subscriptionObjectId cannot be null or empty."
+                    }
+                  },
+                  "missingClickUpWorkspaceId": {
+                    "summary": "Missing ClickUp workspaceId",
+                    "value": {
+                      "error": "Workspace Id of Integration platform is required."
+                    }
+                  },
+                  "missingClickUpApiToken": {
+                    "summary": "Missing ClickUp API Token",
+                    "value": {
+                      "error": "API Key/Token of Integration platform is required."
+                    }
+                  },
+                  "missingSpiraPassword": {
+                    "summary": "Missing Spira password",
+                    "value": {
+                      "error": "Password of Integration platform is required."
+                    }
+                  },
+                  "missingConnectionMode": {
+                    "summary": "Missing connectionMode",
+                    "value": {
+                      "error": "connectionMode cannot be null or empty."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission to perform this operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "User does not have authorization to access this feature"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal error occurred while integrating Project Requirement Traceability"
+                    }
+                  }
                 }
               }
             }

@@ -25,13 +25,13 @@
     }
   ],
   "paths": {
-    "/scn/scenarios/auto/fetch-details": {
+    "/scn/scenarios/{scenarioType}/fetch-details": {
       "post": {
         "tags": [
           "Scenario"
         ],
         "summary": "Retrieve Scenario details with advanced filtering and pagination support",
-        "description": "Fetches comprehensive information about automated test Scenarios within your project. This endpoint supports:\n\n- **Pagination**: Control response size with configurable page numbers and sizes (max 25 items per page)\n- **Flexible Filtering**: Filter by specific Scenario IDs or requirement traceability keys\n- **Optional Detailed Information**: Selectively include  Scenario metadata such as step details, requirement traceability in the response\n-  **Version Control**: Choose between base version or user's checked-out version of Scenarios",
+        "description": "Fetches comprehensive information about test Scenarios within your project. This endpoint supports:\n\n- **Pagination**: Control response size with configurable page numbers and sizes (max 25 items per page)\n- **Flexible Filtering**: Filter by specific Scenario IDs or requirement traceability keys\n- **Optional Detailed Information**: Selectively include  Scenario metadata such as step details, requirement traceability in the response\n-  **Version Control**: Choose between base version or user's checked-out version of Scenarios",
         "operationId": "getScenarioStepDetails",
         "parameters": [
           {
@@ -61,6 +61,19 @@
               "type": "string"
             },
             "description": "API key of the user for authentication. Obtain this from your AccelQ user profile."
+          },
+          {
+            "name": "scenarioType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "manual"
+              ]
+            },
+            "description": "Scenario Type"
           },
           {
             "name": "pageNumber",
@@ -128,7 +141,7 @@
                     "properties":{
                       "steps": {
                     "type": "boolean",
-                    "description": "Flag to include the Scenario step details in the response."
+                    "description": "Flag to include the auto Scenario step details in the response. This will be ignored for manual Scenarios."
                   },
                   "requirementTraceability": {
                     "type": "boolean",
@@ -219,6 +232,9 @@
                           "requirementTraceability": {
                             "type": "array",
                             "description": "List of Requirement traceability keys associated to the Scenario",
+                            "items": {
+                              "type": "string"
+                            },
                             "example": [
                               "TP-22",
                               "TP-49"
