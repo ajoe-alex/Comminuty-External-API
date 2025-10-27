@@ -136,17 +136,21 @@
                       }
                     }
                   },
-                  "fetchDetails":{
-                    "type":"object",
-                    "properties":{
+                  "fetchDetails": {
+                    "type": "object",
+                    "properties": {
                       "steps": {
-                    "type": "boolean",
-                    "description": "Flag to include the auto Scenario step details in the response. This will be ignored for manual Scenarios."
-                  },
-                  "requirementTraceability": {
-                    "type": "boolean",
-                    "description": "Flag to include the Scenario requirement traceability details in the response."
-                  }
+                        "type": "boolean",
+                        "description": "Flag to include the auto Scenario step details in the response. This will be ignored for manual Scenarios."
+                      },
+                      "requirementTraceability": {
+                        "type": "boolean",
+                        "description": "Flag to include the Scenario requirement traceability details in the response."
+                      },
+                      "metadata": {
+                        "type": "boolean",
+                        "description": "Flag to include Scenario metadata. Defaults to false, if not specified."
+                      }
                     }
                   }
                 }
@@ -203,6 +207,67 @@
                             "example": true,
                             "description": "Indicates whether the returned entity is the base version or the checked-out version."
                           },
+                          "metadata": {
+                            "type": "object",
+                            "properties": {
+                              "testCasesCount": {
+                                "type": "integer",
+                                "example": 15,
+                                "description": "Total number of test cases associated with the Scenario."
+                              },
+                              "traceabilityCount": {
+                                "type": "integer",
+                                "example": 7,
+                                "description": "Number of requirements associated to the Scenario."
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "New",
+                                "description": "Current status of the Scenario, such as New, In Progress, or Completed."
+                              },
+                              "createdBy": {
+                                "type": "string",
+                                "example": "Tenant Admin",
+                                "description": "Name of the user who created the Scenario."
+                              },
+                              "createdTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-10-08T09:24:22Z",
+                                "description": "UTC Timestamp when the Scenario was created, in ISO 8601 format."
+                              },
+                              "lastModifiedBy": {
+                                "type": "string",
+                                "example": "Verni Cooper",
+                                "description": "Name of the user who last modified the Scenario."
+                              },
+                              "lastModifiedTimestamp": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-10-19T17:59:05Z",
+                                "description": "UTC Timestamp of the last modification made to the Scenario, in ISO 8601 format."
+                              },
+                              "customFields": {
+                                "type": "object",
+                                "example": {
+                                  "Priority": "Low",
+                                  "New List": "true"
+                                },
+                                "description": "Custom fields associated with the Scenario, represented as key-value pairs."
+                              },
+                              "tags": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                },
+                                "example": [
+                                  "To be Reviewed",
+                                  "Smoke"
+                                ],
+                                "description": "List of tags associated with the Scenario."
+                              }
+                            }
+                          },
                           "stepDetails": {
                             "type": "array",
                             "description": "List of step details in the Scenario",
@@ -241,8 +306,96 @@
                             ]
                           }
                         }
-                      },
-                      "example": [
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "summary": {
+                    "value": {
+                      "page": 1,
+                      "pageSize": 10,
+                      "totalPages": 1,
+                      "totalCount": 3,
+                      "results": [
+                        {
+                          "id": 1,
+                          "name": "Ticket Booking",
+                          "description": "Scenario to test Ticket Booking functionality",
+                          "isCheckedOutVersion": true,
+                          "metadata": {
+                            "testCasesCount": 15,
+                            "traceabilityCount": 7,
+                            "status": "New",
+                            "createdBy": "Tenant Admin",
+                            "createdTimestamp": "2025-10-08T09:24:22Z",
+                            "lastModifiedBy": "Verni Cooper",
+                            "lastModifiedTimestamp": "2025-10-19T17:59:05Z",
+                            "customFields": {
+                              "Priority": "Low",
+                              "New List": "true"
+                            },
+                            "tags": [
+                              "To be Reviewed",
+                              "Smoke"
+                            ]
+                          }
+                        },
+                        {
+                          "id": 3,
+                          "name": "User Registration",
+                          "description": "Scenario to test new user registration flow",
+                          "isCheckedOutVersion": false,
+                          "metadata": {
+                            "testCasesCount": 8,
+                            "traceabilityCount": 1,
+                            "status": "Completed",
+                            "createdBy": "John Citadel",
+                            "createdTimestamp": "2025-10-08T09:24:22Z",
+                            "lastModifiedBy": "Tenant Admin",
+                            "lastModifiedTimestamp": "2025-10-19T17:59:05Z",
+                            "customFields": {
+                              "Priority": "High",
+                              "New List": "true"
+                            },
+                            "tags": [
+                              "Regression",
+                              "Critical"
+                            ]
+                          }
+                        },
+                        {
+                          "id": 8,
+                          "name": "Logout",
+                          "description": "Scenario to test user logout",
+                          "isCheckedOutVersion": true,
+                          "metadata": {
+                            "testCasesCount": 15,
+                            "traceabilityCount": 7,
+                            "status": "New",
+                            "createdBy": "Tenant Admin",
+                            "createdTimestamp": "2025-10-08T09:24:22Z",
+                            "lastModifiedBy": "Tenant Admin",
+                            "lastModifiedTimestamp": "2025-10-19T17:59:05Z",
+                            "customFields": {
+                              "Priority": "Low",
+                              "New List": "true"
+                            },
+                            "tags": [
+                              "Smoke"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "stepDetails": {
+                    "value": {
+                      "page": 1,
+                      "pageSize": 10,
+                      "totalPages": 1,
+                      "totalCount": 3,
+                      "results": [
                         {
                           "id": 1,
                           "name": "Ticket Booking",
@@ -261,10 +414,6 @@
                               "actionDescription": "Action to login into the booking system",
                               "contextName": "Login Page"
                             }
-                          ],
-                          "requirementTraceability": [
-                            "TP-22",
-                            "TP-49"
                           ]
                         },
                         {
@@ -285,8 +434,7 @@
                               "actionDescription": "Fills the registration form.",
                               "contextName": "Registration Form"
                             }
-                          ],
-                          "requirementTraceability": []
+                          ]
                         },
                         {
                           "id": 8,
@@ -300,7 +448,40 @@
                               "actionDescription": "Clicks the logout button.",
                               "contextName": "Header"
                             }
-                          ],
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "requirementTraceability": {
+                    "value": {
+                      "page": 1,
+                      "pageSize": 10,
+                      "totalPages": 1,
+                      "totalCount": 3,
+                      "results": [
+                        {
+                          "id": 1,
+                          "name": "Ticket Booking",
+                          "description": "Scenario to test Ticket Booking functionality",
+                          "isCheckedOutVersion": true,
+                          "requirementTraceability": [
+                            "TP-22",
+                            "TP-49"
+                          ]
+                        },
+                        {
+                          "id": 3,
+                          "name": "User Registration",
+                          "description": "Scenario to test new user registration flow",
+                          "isCheckedOutVersion": false,
+                          "requirementTraceability": []
+                        },
+                        {
+                          "id": 8,
+                          "name": "Logout",
+                          "description": "Scenario to test user logout",
+                          "isCheckedOutVersion": true,
                           "requirementTraceability": []
                         }
                       ]
@@ -374,7 +555,7 @@
         "tags": [
           "Scenario"
         ],
-       "summary":"Process multiple Scenario updates with granular control and configurations",
+        "summary": "Process multiple Scenario updates with granular control and configurations",
         "description": "Provides efficient bulk updates of Scenario metadata through flexible, operation-based requests. This API allows different Scenarios to be updated with distinct criteria and configurations. Each object in the payload targets specific Scenario IDs and applies the defined metadata changes, providing granular control over batch modifications.",
         "operationId": "updateScenarios",
         "parameters": [
@@ -394,7 +575,7 @@
             "schema": {
               "type": "string"
             },
-           "description": "API key of the user for authentication. Obtain this from your AccelQ user profile."
+            "description": "API key of the user for authentication. Obtain this from your AccelQ user profile."
           },
           {
             "name": "scenarioType",
@@ -416,88 +597,100 @@
             "application/json": {
               "schema": {
                 "type": "array",
-                "items":{
-                  "type":"object",
+                "items": {
+                  "type": "object",
                   "required": [
-                  "scenarioIds",
-                  "requirementKeys",
-                  "updateType",
-                  "externalIntegrationProject"
-                ],
-                "properties": {
-                  "scenarioIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
+                    "scenarioIds",
+                    "requirementKeys",
+                    "updateType",
+                    "externalIntegrationProject"
+                  ],
+                  "properties": {
+                    "scenarioIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      },
+                      "description": "List of Scenario IDs to integrate with requirements",
+                      "example": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        10
+                      ]
                     },
-                    "description": "List of Scenario IDs to integrate with requirements",
-                    "example": [
-                      1,
-                      2,
-                      3,
-                      4,
-                      5,
-                      10
-                    ]
-                  },
-                  "requirementTraceability": {
-                    "type": "object",
-                    "description": "Contains details for updating requirement traceability of Scenario entities.",
-                    "properties": {
-                      "requirementKeys": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
+                    "requirementTraceability": {
+                      "type": "object",
+                      "description": "Contains details for updating requirement traceability of Scenario entities.",
+                      "properties": {
+                        "requirementKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "List of requirement keys to associate with Scenarios",
+                          "example": [
+                            "key1",
+                            "Key3"
+                          ]
                         },
-                        "description": "List of requirement keys to associate with Scenarios",
-                        "example": [
-                          "key1",
-                          "Key3"
-                        ]
-                      },
-                      "updateType": {
-                        "type": "string",
-                        "enum": [
-                          "OVERRIDE",
-                          "APPEND"
-                        ],
-                        "description": "Specifies the update behavior: OVERRIDE replaces existing requirements, APPEND adds new requirements to existing ones"
-                      },
-                      "externalIntegrationProject": {
-                        "type": "string",
-                        "description": "Name of the external integration project",
-                        "example": "JIRA HOME"
+                        "updateType": {
+                          "type": "string",
+                          "enum": [
+                            "OVERRIDE",
+                            "APPEND"
+                          ],
+                          "description": "Specifies the update behavior: OVERRIDE replaces existing requirements, APPEND adds new requirements to existing ones"
+                        },
+                        "externalIntegrationProject": {
+                          "type": "string",
+                          "description": "Name of the external integration project",
+                          "example": "JIRA HOME"
+                        }
                       }
                     }
                   }
-                }
                 },
-                "example":[
+                "example": [
                   {
-                    "scenarioIds":[1,2],
-                    "requirementTraceability":{
-                      "requirementKeys":["TP-11","TP-31"],
-                      "updateType":"APPEND",
-                      "externalIntegrationProject":"SanityWorkSpace"
+                    "scenarioIds": [
+                      1,
+                      2
+                    ],
+                    "requirementTraceability": {
+                      "requirementKeys": [
+                        "TP-11",
+                        "TP-31"
+                      ],
+                      "updateType": "APPEND",
+                      "externalIntegrationProject": "SanityWorkSpace"
                     }
                   },
                   {
-                    "scenarioIds":[98,102],
-                    "requirementTraceability":{
-                      "requirementKeys":["TP-51","TP-319","TP-987"],
-                      "updateType":"OVERRIDE",
-                      "externalIntegrationProject":"SanityWorkSpace"
+                    "scenarioIds": [
+                      98,
+                      102
+                    ],
+                    "requirementTraceability": {
+                      "requirementKeys": [
+                        "TP-51",
+                        "TP-319",
+                        "TP-987"
+                      ],
+                      "updateType": "OVERRIDE",
+                      "externalIntegrationProject": "SanityWorkSpace"
                     }
                   }
                 ]
-                
               }
             }
           }
         },
         "responses": {
           "200": {
-           "description": "Bulk update completed with detailed results showing successfully updated Scenarios, checkout conflicts, and not found Scenario IDs.",
+            "description": "Bulk update completed with detailed results showing successfully updated Scenarios, checkout conflicts, and not found Scenario IDs.",
             "content": {
               "application/json": {
                 "schema": {
