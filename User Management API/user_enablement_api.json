@@ -25,7 +25,7 @@
       "get": {
         "tags": ["Subscription Management"],
         "summary": "Retrieve subscription information",
-        "description": "Get a list of all subscriptions with their license details.",
+        "description": "Retrieves a comprehensive list of all Subscriptions, including detailed information about their associated licenses.",
         "operationId": "getSubscriptions",
         "parameters": [
           {
@@ -49,7 +49,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval of subscription information",
+            "description": "Successful retrieval of Subscription information",
             "content": {
               "application/json": {
                 "schema": {
@@ -60,7 +60,7 @@
                       "subscriptionId": {
                         "type": "string",
                         "example": "1724156779826",
-                        "description": "Unique identifier for the subscription"
+                        "description": "Unique identifier for the Subscription"
                       },
                       "subscriptionName": {
                         "type": "string",
@@ -79,37 +79,61 @@
                       },
                       "subscriptionType": {
                         "type": "string",
-                        "example": "Enterprise",
+                        "example": "Commercial",
                         "description": "Type of subscription"
                       },
-                      "licenseDetailsList": {
+                      "licenseBundles": {
                         "type": "array",
-                        "description": "List of licenses associated with the subscription",
+                        "description": "List of license bundles associated with the Subscription",
                         "items": {
                           "type": "object",
                           "properties": {
-                            "licenseType": {
-                              "type": "string",
-                              "example": "UNIFIED_WEB",
-                              "description": "Type of license"
+                            "licenseBundleId": {
+                              "type": "integer",
+                              "example": "1",
+                              "description": "Unique identifier for the license bundle."
                             },
-                            "totalLicences": {
+                            "products": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "example": ["WEB", "API"],
+                              "description": "Combination of products in the license"
+                            },
+                            "totalLicenses": {
                               "type": "integer",
                               "example": 10,
                               "description": "Total number of licenses available"
                             },
-                            "assignedLicences": {
+                            "assignedLicenses": {
                               "type": "integer",
                               "example": 3,
                               "description": "Number of licenses currently assigned"
                             },
-                            "availableLicences": {
+                            "availableLicenses": {
                               "type": "integer",
                               "example": 7,
                               "description": "Number of available licenses"
                             }
                           }
-                        }
+                        },
+                        "example": [
+                          {
+                            "licenseBundleId": 1,
+                            "products": ["WEB", "API"],
+                            "totalLicenses": 10,
+                            "assignedLicenses": 3,
+                            "availableLicenses": 7
+                          },
+                          {
+                            "licenseBundleId": 3,
+                            "products": ["MOBILE", "API"],
+                            "totalLicenses": 5,
+                            "assignedLicenses": 4,
+                            "availableLicenses": 1
+                          }
+                        ]
                       }
                     }
                   }
@@ -155,8 +179,8 @@
     "/administration/users": {
       "get": {
         "tags": ["User Administration"],
-        "summary": "Retrieve all users from the Tenant",
-        "description": "Get a list of all users with their license details and project assignments.",
+        "summary": "Retrieve all users in the Tenant",
+        "description": "Retrieve a list of all users in the tenant, including their assigned licenses and Project roles.",
         "operationId": "getAllUsers",
         "parameters": [
           {
@@ -218,7 +242,7 @@
                         "example": false,
                         "description": "Flag indicating if the user is a Tenant administrator"
                       },
-                      "licenseDetailsList": {
+                      "assignedLicenses": {
                         "type": "array",
                         "description": "List of licenses assigned to the user",
                         "items": {
@@ -229,21 +253,18 @@
                               "example": "1724156779826",
                               "description": "Identifier of the subscription"
                             },
-                            "subscriptionName": {
-                              "type": "string",
-                              "example": "1724156779826",
-                              "description": "Name of the subscription"
+                            "licenseBundleId": {
+                              "type": "integer",
+                              "example": 1,
+                              "description": "Unique identifier of the license bundle."
                             },
-                            "licenseType": {
-                              "type": "string",
-                              "example": "UNIFIED_WEB",
-                              "description": "Type of license"
-                            },
-                            "subscriptionType": {
-                              "type": "string",
-                              "example": "Non-commercial use",
-                              "nullable": true,
-                              "description": "Type of subscription"
+                            "products": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "example": ["WEB", "API"],
+                              "description": "license products in the bundle"
                             }
                           }
                         }
@@ -371,31 +392,32 @@
                     "example": false,
                     "description": "Flag indicating if the user is a site administrator"
                   },
-                  "authType":{
-                     "type":"enum",
-                     "example":"SSO",
-                     "description": "Authentication type for user login. Accepted values are ['ACCELQ_NATIVE', 'SSO']."
+                  "authType": {
+                    "type": "string",
+                    "example": "SSO",
+                    "enum": ["ACCELQ_NATIVE", "SSO"],
+                    "description": "Authentication type for user login. Accepted values are ['ACCELQ_NATIVE', 'SSO']."
                   },
-                  "ssoId":{
-                    "type":"string",
-                    "example":"DemoUser@gmail.com",
-                    "description":"sso Id for Single sign on authentication. Required with authType as 'SSO'."
+                  "ssoId": {
+                    "type": "string",
+                    "example": "DemoUser@gmail.com",
+                    "description": "sso Id for Single sign on authentication. Required with authType as 'SSO'."
                   },
-                  "licenseDetailsList": {
+                  "assignedLicenses": {
                     "type": "array",
                     "items": {
                       "type": "object",
-                      "required": ["subscriptionId", "licenseType"],
+                      "required": ["subscriptionId", "licenseId"],
                       "properties": {
                         "subscriptionId": {
-                          "type": "integer",
+                          "type": "string",
                           "example": 172415678689826,
                           "description": "Unique identifier of the subscription"
                         },
-                        "licenseType": {
-                          "type": "string",
-                          "example": "UNIFIED_WEB",
-                          "description": "Type of license being assigned"
+                        "licenseBundleId": {
+                          "type": "integer",
+                          "example": "2",
+                          "description": "Unique identifier for the license bundle."
                         }
                       }
                     }
@@ -437,13 +459,97 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User creation successful."
-                    },
                     "userPid": {
                       "type": "integer",
-                      "example": 26
+                      "example": "25",
+                      "description": "Unique identifier of the user"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "Test",
+                      "description": "First name of the user"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "example": "User4",
+                      "description": "Last name of the user"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "Testuser4@accelq.com",
+                      "description": "Email address of the user"
+                    },
+                    "active": {
+                      "type": "boolean",
+                      "example": true,
+                      "description": "Flag indicating if the user account is active"
+                    },
+                    "tenantAdmin": {
+                      "type": "boolean",
+                      "example": false,
+                      "description": "Flag indicating if the user is a Tenant administrator"
+                    },
+                    "assignedLicenses": {
+                      "type": "array",
+                      "description": "List of licenses assigned to the user",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "subscriptionId": {
+                            "type": "string",
+                            "example": "1724156779826",
+                            "description": "Identifier of the subscription"
+                          },
+                          "subscriptionName": {
+                            "type": "string",
+                            "example": "1724156779826",
+                            "description": "Name of the subscription"
+                          },
+                          "licenseBundleId": {
+                            "type": "integer",
+                            "example": 2,
+                            "description": "Unique identifier of the license bundle."
+                          },
+                           "products": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "example": ["WEB", "API"],
+                              "description": "license products in the bundle"
+                            },
+                          "subscriptionType": {
+                            "type": "string",
+                            "example": "Commercial",
+                            "nullable": true,
+                            "description": "Type of subscription"
+                          }
+                        }
+                      }
+                    },
+                    "assignedProjects": {
+                      "type": "array",
+                      "description": "List of projects assigned to the user",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "projectName": {
+                            "type": "string",
+                            "example": "AccelqPROJECT",
+                            "description": "Name of the project"
+                          },
+                          "roleName": {
+                            "type": "string",
+                            "example": "SME",
+                            "description": "Role of the user in the project"
+                          },
+                          "isAdmin": {
+                            "type": "boolean",
+                            "example": false,
+                            "description": "Flag indicating if user is admin for this project"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -529,7 +635,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Unique identifier of the user"
+            "description": "Unique identifier of the user to be deleted"
           },
           {
             "name": "user_id",
@@ -550,9 +656,6 @@
             "description": "API key of the user for authentication"
           }
         ],
-        "requestBody": {
-          "content": {}
-        },
         "responses": {
           "204": {
             "description": "User successfully deleted",
@@ -613,7 +716,7 @@
       "put": {
         "tags": ["User Administration"],
         "summary": "Activate or schedule activation of a user",
-        "description": "Activate a user with specific active period dates",
+        "description": "Activate a user immediately or schedule their activation for a specific period.",
         "operationId": "activateUser",
         "parameters": [
           {
@@ -703,9 +806,9 @@
                       "example": false,
                       "description": "Flag indicating if the user is a Tenant administrator"
                     },
-                    "licenseDetailsList": {
+                    "assignedLicenses": {
                       "type": "array",
-                      "description": "List of licenses assigned to the user",
+                      "description": "List of license bundles assigned to the user",
                       "items": {
                         "type": "object",
                         "properties": {
@@ -719,10 +822,18 @@
                             "example": "1724156779826",
                             "description": "Name of the subscription"
                           },
-                          "licenseType": {
-                            "type": "string",
-                            "example": "UNIFIED_WEB",
-                            "description": "Type of license"
+                          "licenseBundleId":{
+                            "type": "integer",
+                            "example": 3,
+                            "description": "Unique identifier of the license."
+                          },
+                          "products": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "example": ["WEB", "MOBILE"],
+                            "description": "license products in the bundle"
                           },
                           "subscriptionType": {
                             "type": "string",
@@ -822,8 +933,8 @@
     "/administration/users/deactivate/{userPid}": {
       "put": {
         "tags": ["User Administration"],
-        "summary": "Deactivation of a user",
-        "description": "Activate a user with specific active period dates",
+        "summary": "Deactivates a user",
+        "description": "Deactivate a user by their userPid",
         "operationId": "deactivateUser",
         "parameters": [
           {
@@ -854,103 +965,14 @@
             "description": "API key of the user for authentication"
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {}
-        },
         "responses": {
           "200": {
             "description": "User deactivation successful",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "userPid": {
-                      "type": "integer",
-                      "example": "25",
-                      "description": "Unique identifier of the user"
-                    },
-                    "firstName": {
-                      "type": "string",
-                      "example": "Test",
-                      "description": "First name of the user"
-                    },
-                    "lastName": {
-                      "type": "string",
-                      "example": "User",
-                      "description": "Last name of the user"
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "Testuser@accelq.com",
-                      "description": "Email address of the user"
-                    },
-                    "active": {
-                      "type": "boolean",
-                      "example": true,
-                      "description": "Flag indicating if the user account is active"
-                    },
-                    "tenantAdmin": {
-                      "type": "boolean",
-                      "example": false,
-                      "description": "Flag indicating if the user is a Tenant administrator"
-                    },
-                    "licenseDetailsList": {
-                      "type": "array",
-                      "description": "List of licenses assigned to the user",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "subscriptionId": {
-                            "type": "string",
-                            "example": "1724156779826",
-                            "description": "Identifier of the subscription"
-                          },
-                          "subscriptionName": {
-                            "type": "string",
-                            "example": "1724156779826",
-                            "description": "Name of the subscription"
-                          },
-                          "licenseType": {
-                            "type": "string",
-                            "example": "UNIFIED_WEB",
-                            "description": "Type of license"
-                          },
-                          "subscriptionType": {
-                            "type": "string",
-                            "example": "Non-commercial use",
-                            "nullable": true,
-                            "description": "Type of subscription"
-                          }
-                        }
-                      }
-                    },
-                    "assignedProjects": {
-                      "type": "array",
-                      "description": "List of projects assigned to the user",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "projectName": {
-                            "type": "string",
-                            "example": "accelq Project",
-                            "description": "Name of the project"
-                          },
-                          "roleName": {
-                            "type": "string",
-                            "example": "SME",
-                            "description": "Role of the user in the project"
-                          },
-                          "isAdmin": {
-                            "type": "boolean",
-                            "example": false,
-                            "description": "Flag indicating if user is admin for this project"
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "type": "boolean",
+                  "example":true
                 }
               }
             }
@@ -1016,7 +1038,7 @@
       "put": {
         "tags": ["User Administration"],
         "summary": "Assign licenses to a user",
-        "description": "Assign one or more licenses to a user based on subscription details.",
+        "description": "Assign or update one or more licenses for a user by specifying the relevant subscription and license details.",
         "operationId": "assignUserLicense",
         "parameters": [
           {
@@ -1055,18 +1077,18 @@
                     "type": "array",
                     "items": {
                       "type": "object",
-                      "required": ["subscriptionId", "licenseType"],
+                      "required": ["subscriptionId", "licenseId"],
                       "properties": {
                         "subscriptionId": {
-                          "type": "integer",
+                          "type": "string",
                           "example": 1724156779826,
                           "description": "Unique identifier of the subscription"
                         },
-                        "licenseType": {
-                          "type": "string",
-                          "example": "UNIFIED_WEB",
-                          "description": "Type of license being assigned"
-                        }
+                          "licenseBundleId": {
+                            "type": "integer",
+                            "example": 3,
+                            "description": "Unique identifier of the license bundle."
+                          }
                       }
                     }
                   }
@@ -1107,7 +1129,7 @@
                       "type": "boolean",
                       "example": false
                     },
-                    "licenseDetailsList": {
+                    "assignedLicenses": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -1120,10 +1142,17 @@
                             "type": "string",
                             "example": "1724156779826"
                           },
-                          "licenseType": {
-                            "type": "string",
-                            "example": "UNIFIED_WEB"
-                          },
+                            "licenseBundleId": {
+                              "type": "integer",
+                              "example": 3
+                            },
+                            "products": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "example": ["WEB", "Desktop"]
+                            },
                           "subscriptionType": {
                             "type": "string",
                             "example": "Enterprise"
